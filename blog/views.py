@@ -5,12 +5,14 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 # def index(request):
 #     return render(request, "blog/index.html")
-
+import logging 
+logger = logging.getLogger(__name__)
 def index(request):
     posts = Post.objects.filter(published_at__lte=timezone.now())
     return render(request, "blog/index.html", {"posts": posts})
 from django.shortcuts import redirect
 from blog.forms import CommentForm
+
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
