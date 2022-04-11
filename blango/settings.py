@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from configurations import Configuration
 from pathlib import Path
 from configurations import values
-
+import dj_database_url
 class Dev(Configuration):
 
         # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -87,13 +87,20 @@ class Dev(Configuration):
         # Database
         # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
+        # DATABASES = {
+        #     'default': {
+        #         'ENGINE': 'django.db.backends.sqlite3',
+        #         'NAME': BASE_DIR / 'db.sqlite3',
+        #     }
+        # }
 
+        DATABASES = {
+        "default": dj_database_url.config(default=f"sqlite:///{BASE_DIR}/db.sqlite3"),
+        "alternative": dj_database_url.config(
+            "ALTERNATIVE_DATABASE_URL",
+            default=f"sqlite:///{BASE_DIR}/alternative_db.sqlite3",
+                 ),
+                    }
 
         # Password validation
         # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -137,5 +144,10 @@ class Dev(Configuration):
         # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
         DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+class Prod(Dev):
+  DEBUG = values.BooleanValue(True)
+  SECRET_KEY = values.SecretValue()
+  
 
 
